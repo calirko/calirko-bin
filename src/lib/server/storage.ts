@@ -1,25 +1,63 @@
 import { Client } from 'minio';
+import { env } from '$env/dynamic/private';
 
-const ENDPOINT = process.env.MINIO_ENDPOINT ?? 'localhost';
-const PORT = parseInt(process.env.MINIO_PORT ?? '9000');
-const USE_SSL = process.env.MINIO_USE_SSL === 'true';
-const BUCKET = process.env.MINIO_BUCKET ?? 'calirko-bin';
-const PUBLIC_URL =
-	process.env.MINIO_PUBLIC_URL ??
-	`${USE_SSL ? 'https' : 'http'}://${ENDPOINT}:${PORT}`;
+let _client: Client | null = null;
+let _initialized = false;
 
-const client = new Client({
-	endPoint: ENDPOINT,
-	port: PORT,
-	useSSL: USE_SSL,
-	accessKey: process.env.MINIO_ACCESS_KEY ?? 'minioadmin',
-	secretKey: process.env.MINIO_SECRET_KEY ?? 'minioadmin'
-});
+function getClient(): Client {
+	if (!_client) {
+		_client = new Client({
+			endPoint: env.MINIO_ENDPOINT ?? 'localhost',
+			port: parseInt(env.MINIO_PORT ?? '9000'),
+			useSSL: env.MINIO_USE_SSL === 'true',
+			accessKey: env.MINIO_ACCESS_KEY ?? 'minioadmin',
+			secretKey: env.MINIO_SECRET_KEY ?? 'minioadmin'
+		});
+	}
+	return _client;
+}
+
+function bucket(): string {
+	return env.MINIO_BUCKET ?? 'calirko-bin';
+}
+
+function publicUrl(): string {
+	const ssl = env.MINIO_USE_SSL === 'true';
+	const host = env.MINIO_ENDPOINT ?? 'localhost';
+	const port = env.MINIO_PORT ?? '9000';
+	return env.MINIO_PUBLIC_URL ?? `${ssl ? 'https' : 'http'}://${host}:${port}`;
+}
+
+async function init(client: Client, bucketName: string): Promise<void> {
+	if (_initialized) return;
+
+	const exists = await client.bucketExists(bucketName);
+	if (!exists) await client.makeBucket(bucketName);
+
+	await client.setBucketPolicy(
+		bucketName,
+		JSON.stringify({
+			Version: '2012-10-17',
+			Statement: [
+				{
+					Effect: 'Allow',
+					Principal: { AWS: ['*'] },
+					Action: ['s3:GetObject'],
+					Resource: [`arn:aws:s3:::${bucketName}/*`]
+				}
+			]
+		})
+	);
+
+	_initialized = true;
+}
 
 export async function uploadFile(key: string, data: Buffer, contentType: string): Promise<void> {
-	await client.putObject(BUCKET, key, data, data.length, { 'Content-Type': contentType });
+	const client = getClient();
+	await init(client, bucket());
+	await client.putObject(bucket(), key, data, data.length, { 'Content-Type': contentType });
 }
 
 export function getFileUrl(key: string): string {
-	return `${PUBLIC_URL}/${BUCKET}/${key}`;
+	return `${publicUrl()}/${bucket()}/${key}`;
 }

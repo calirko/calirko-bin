@@ -1,10 +1,7 @@
 import { createHmac, timingSafeEqual } from 'crypto';
+import { env } from '$env/dynamic/private';
 
 export const SESSION_COOKIE = 'admin_session';
-
-const SECRET = process.env.ADMIN_SECRET ?? 'change-me-in-production';
-const USERNAME = process.env.ADMIN_USERNAME ?? 'admin';
-const PASSWORD = process.env.ADMIN_PASSWORD ?? 'admin';
 
 function safeEqual(a: string, b: string): boolean {
 	try {
@@ -15,15 +12,22 @@ function safeEqual(a: string, b: string): boolean {
 }
 
 export function verifyCredentials(username: string, password: string): boolean {
-	return safeEqual(username, USERNAME) && safeEqual(password, PASSWORD);
+	return (
+		safeEqual(username, env.ADMIN_USERNAME ?? 'admin') &&
+		safeEqual(password, env.ADMIN_PASSWORD ?? 'admin')
+	);
 }
 
 export function createSessionToken(): string {
-	return createHmac('sha256', SECRET).update(USERNAME).digest('hex');
+	const secret = env.ADMIN_SECRET ?? 'change-me-in-production';
+	const username = env.ADMIN_USERNAME ?? 'admin';
+	return createHmac('sha256', secret).update(username).digest('hex');
 }
 
 export function verifySessionToken(token: string): boolean {
-	const expected = createHmac('sha256', SECRET).update(USERNAME).digest('hex');
+	const secret = env.ADMIN_SECRET ?? 'change-me-in-production';
+	const username = env.ADMIN_USERNAME ?? 'admin';
+	const expected = createHmac('sha256', secret).update(username).digest('hex');
 	try {
 		return timingSafeEqual(Buffer.from(token, 'hex'), Buffer.from(expected, 'hex'));
 	} catch {

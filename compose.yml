@@ -7,24 +7,23 @@ services:
     environment:
       NODE_ENV: production
       PORT: "3000"
-      # SvelteKit requires ORIGIN in production for CSRF protection
       ORIGIN: ${ORIGIN}
-      # Database (persisted in the volume below)
+      ADMIN_USERNAME: ${ADMIN_USERNAME}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      ADMIN_SECRET: ${ADMIN_SECRET}
       DATABASE_PATH: /app/data/db.json
-      # MinIO
       MINIO_ENDPOINT: ${MINIO_ENDPOINT}
       MINIO_PORT: ${MINIO_PORT:-9000}
       MINIO_USE_SSL: ${MINIO_USE_SSL:-false}
       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
       MINIO_BUCKET: ${MINIO_BUCKET:-calirko-bin}
-      MINIO_PUBLIC_URL: ${MINIO_PUBLIC_URL:-}
-      # Raise body limit for file uploads (bytes, default is 512kb)
+      MINIO_PUBLIC_URL: ${MINIO_PUBLIC_URL}
       BODY_SIZE_LIMIT: ${BODY_SIZE_LIMIT:-10485760}
     volumes:
       - db-data:/app/data
     networks:
-      - traefik
+      - dragon
     healthcheck:
       test:
         [
@@ -38,10 +37,18 @@ services:
       retries: 3
       start_period: 15s
 
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run --token ${CLOUDFLARE_TUNNEL_TOKEN}
+    networks:
+      - dragon
+    depends_on:
+      - app
+
 volumes:
   db-data:
 
 networks:
-  traefik:
+  dragon:
     external: true
-    name: ${TRAEFIK_NETWORK}

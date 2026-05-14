@@ -19,7 +19,7 @@ export const actions: Actions = {
 		}
 
 		cookies.set(SESSION_COOKIE, createSessionToken(), {
-			path: '/admin',
+			path: '/',
 			httpOnly: true,
 			secure: process.env.NODE_ENV === 'production',
 			sameSite: 'strict',

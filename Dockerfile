@@ -17,7 +17,8 @@ FROM node:22-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 
-RUN addgroup --system --gid 1001 nodejs \
+RUN apk add --no-cache ffmpeg \
+ && addgroup --system --gid 1001 nodejs \
  && adduser  --system --uid 1001 sveltekit
 
 COPY --from=builder   --chown=sveltekit:nodejs /app/build        ./build

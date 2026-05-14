@@ -16,3 +16,9 @@ export interface PostRendered extends Post {
 	files: (PostFile & { url: string })[];
 	html: string;
 }
+
+export interface Settings {
+	slogan: string;
+	backgroundKey: string | null;
+	accentColor: string | null;
+}
