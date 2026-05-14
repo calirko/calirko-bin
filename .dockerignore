@@ -1,0 +1,16 @@
+.svelte-kit/
+build/
+node_modules/
+data/
+
+.git/
+.gitignore
+.vscode/
+
+*.md
+.env
+.env.*
+!.env.example
+
+.DS_Store
+Thumbs.db
