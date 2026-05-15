@@ -56,10 +56,10 @@
             </div>
         </header>
 
-        <main class="flex-1 flex flex-col px-6 py-8">
+        <main class="flex-1 flex flex-col">
             {@render children()}
         </main>
 
-        <Footer />
+        <Footer postCount={data.postCount} />
     </div>
 </div>

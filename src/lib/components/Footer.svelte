@@ -1,11 +1,14 @@
 <script lang="ts">
     import { GithubLogo, XLogo, TumblrLogo } from "phosphor-svelte";
     import { Button } from "$lib/components/ui/button";
+    const { postCount } = $props();
 </script>
 
-<footer class="border-t px-6 py-5 mt-auto">
+<footer class="border-t px-6 py-4 mt-auto">
     <div class="flex items-center justify-between">
-        <p class="text-xs text-muted-foreground">end of log.</p>
+        <p class="text-xs text-muted-foreground">
+            end of log. you've just read {postCount || 0} posts
+        </p>
         <div class="flex items-center gap-0.5">
             <Button
                 href="https://github.com/calirko"
