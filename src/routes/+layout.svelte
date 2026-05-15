@@ -1,6 +1,5 @@
 <script lang="ts">
     import "./layout.css";
-    import favicon from "$lib/assets/favicon.svg";
     import { ModeWatcher, mode, toggleMode } from "mode-watcher";
     import { Button } from "$lib/components/ui/button";
     import { Sun, Moon } from "phosphor-svelte";
@@ -11,7 +10,7 @@
 </script>
 
 <svelte:head>
-    <link rel="icon" href={favicon} />
+    <link rel="icon" href={"/favicon.png"} />
     <title>/bin/calirko</title>
     {#if data.accentHue != null}
         {@html `<style>:root{--tint-h:${Math.round(data.accentHue)};--tint-c:0.015}</style>`}
