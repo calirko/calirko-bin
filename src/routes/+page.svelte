@@ -58,7 +58,7 @@
     {#if data.posts.length === 0}
         <p class="text-muted-foreground text-sm">no posts yet.</p>
     {:else}
-        <div class="flex flex-col gap-4">
+        <div class="flex flex-col">
             {#each data.posts as post}
                 <PostCard {post} isAdmin={data.isAdmin} />
             {/each}
@@ -80,7 +80,7 @@
                                 >{tag.name}</span
                             ></Badge
                         >
-                        <span class="text-xs text-muted-foreground"
+                        <span class="text-sm text-muted-foreground"
                             >({tag.count})</span
                         >
                     </div>
@@ -91,33 +91,33 @@
 {:else if data.tab === "about"}
     <div class="flex px-6 py-4 flex-col gap-y-2">
         <b>this is /bin/calirko</b>
-        <p class="text-muted-foreground text-xs">
+        <p class="text-muted-foreground text-sm">
             a place for notes, files, and things worth keeping.
         </p>
-        <p class="text-muted-foreground text-xs">
+        <p class="text-muted-foreground text-sm">
             i'm just a chill fur from 2007 that decided to make this small place
             in my domain calirko.com to put some tech to the test and also just
             vent stuff and ideas for anyone to read
         </p>
-        <p class="text-muted-foreground text-xs">
+        <p class="text-muted-foreground text-sm">
             my tastes are super mixed, they dont fit a genre in any way... i can
             like progressive metal and djent but also enjoy uptempo; love
             breakcore but ignore drum n bass...
         </p>
-        <p class="text-muted-foreground text-xs">
+        <p class="text-muted-foreground text-sm">
             i like coding in svelte, react, using some frameworks like vite,
             even nextjs, tailwindcss, yada yada... i prefer bun over node.
             recently ive been touching a bit of rust too, and i have back
             experience with langs such as java (for desktop interfaces), c and
             c#. you'll definetely see a pattern in my stacks lol
         </p>
-        <p class="text-muted-foreground text-xs">
+        <p class="text-muted-foreground text-sm">
             yup, i am a furry, and i'm very whatever about it. my sona is a dark
             gray/black raccoon (cute lil guys omg) and his name is Kuro. i don't
             take much part into the furry fandom cause i still have different
             values and stardarts for me.
         </p>
-        <p class="text-muted-foreground text-xs">
+        <p class="text-muted-foreground text-sm">
             but anyway, there's ton of stuff around here, feel free to hit me up
             and be friends with me! add me in dc, it's calirko too (everything's
             calirko :p)

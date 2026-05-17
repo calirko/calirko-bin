@@ -3,7 +3,14 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: calirko-bin
+    hostname: calirko-bin
     restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     environment:
       NODE_ENV: production
       PORT: "3000"
@@ -23,7 +30,9 @@ services:
     volumes:
       - db-data:/app/data
     networks:
-      - dragon
+      dragon:
+        aliases:
+          - calirko-bin
     healthcheck:
       test:
         [
@@ -36,15 +45,6 @@ services:
       timeout: 10s
       retries: 3
       start_period: 15s
-
-  cloudflared:
-    image: cloudflare/cloudflared:latest
-    restart: unless-stopped
-    command: tunnel --no-autoupdate run --token ${CLOUDFLARE_TUNNEL_TOKEN}
-    networks:
-      - dragon
-    depends_on:
-      - app
 
 volumes:
   db-data:

@@ -4,12 +4,23 @@ export interface PostFile {
 	type: string;
 }
 
+export interface Music {
+	artist: string;
+	album: string;
+	title: string;
+	coverUrl?: string;
+	tidalUrl?: string;
+	spotifyUrl?: string;
+	youtubeUrl?: string;
+}
+
 export interface Post {
 	id: string;
 	content: string;
 	tags: string[];
 	createdAt: string;
 	files: PostFile[];
+	music?: Music | null;
 }
 
 export interface PostRendered extends Post {

@@ -41,10 +41,24 @@ export const actions: Actions = {
 			newFiles.push({ key, name: fileName, type: mimeType });
 		}
 
+		const hasMusic = formData.get('has_music') === '1';
+		const music = hasMusic
+			? {
+					artist: (formData.get('music_artist') as string)?.trim() ?? '',
+					album: (formData.get('music_album') as string)?.trim() ?? '',
+					title: (formData.get('music_title') as string)?.trim() ?? '',
+					coverUrl: (formData.get('music_cover_url') as string)?.trim() || undefined,
+					tidalUrl: (formData.get('music_tidal_url') as string)?.trim() || undefined,
+					spotifyUrl: (formData.get('music_spotify_url') as string)?.trim() || undefined,
+					youtubeUrl: (formData.get('music_youtube_url') as string)?.trim() || undefined,
+				}
+			: null;
+
 		await updatePost(params.id, {
 			content,
 			tags,
-			files: [...existing.files, ...newFiles]
+			files: [...existing.files, ...newFiles],
+			music,
 		});
 
 		redirect(303, '/');

@@ -2,7 +2,7 @@ import { Low } from "lowdb";
 import { JSONFile } from "lowdb/node";
 import { mkdirSync } from "fs";
 import { dirname, resolve } from "path";
-import type { Post, Settings } from "../types.js";
+import type { Music, Post, Settings } from "../types.js";
 
 const DEFAULT_SETTINGS: Settings = {
   slogan: "calirko's personal log",
@@ -44,6 +44,7 @@ export async function createPost(data: {
   content: string;
   tags: string[];
   files: Post["files"];
+  music?: Music | null;
 }): Promise<Post> {
   const db = await getDb();
   const post: Post = {
@@ -64,7 +65,7 @@ export async function getPost(id: string): Promise<Post | null> {
 
 export async function updatePost(
   id: string,
-  data: { content: string; tags: string[]; files: Post["files"] },
+  data: { content: string; tags: string[]; files: Post["files"]; music?: Music | null },
 ): Promise<Post | null> {
   const db = await getDb();
   const idx = db.data.posts.findIndex((p) => p.id === id);

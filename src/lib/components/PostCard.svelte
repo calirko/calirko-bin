@@ -4,6 +4,8 @@
     import { Button } from "$lib/components/ui/button";
     import { Badge } from "$lib/components/ui/badge";
     import { FileArrowDown, PencilIcon, TrashIcon } from "phosphor-svelte";
+    import MediaViewer from "./MediaViewer.svelte";
+    import MusicCard from "./MusicCard.svelte";
 
     let { post, isAdmin = false }: { post: PostRendered; isAdmin?: boolean } =
         $props();
@@ -14,7 +16,26 @@
     const otherFiles = $derived(
         post.files.filter((f) => !f.type.startsWith("image/")),
     );
+
+    const imageUrls = $derived(imageFiles.map((f) => f.url));
+
+    // For 4+ images: show first 3 + overflow cell in a 2x2
+    const useOverflowGrid = $derived(imageFiles.length > 3);
+    const overflowCount = $derived(imageFiles.length - 3);
+    const gridImages = $derived(
+        useOverflowGrid ? imageFiles.slice(0, 3) : imageFiles,
+    );
+
+    let viewerOpen = $state(false);
+    let viewerStart = $state(0);
+
+    function openViewer(index: number) {
+        viewerStart = index;
+        viewerOpen = true;
+    }
 </script>
+
+<MediaViewer urls={imageUrls} startIndex={viewerStart} bind:open={viewerOpen} />
 
 <div class="flex flex-col gap-4 px-6 py-4 border-b">
     <!-- meta row -->
@@ -35,6 +56,29 @@
                 {/each}
             </div>
         {/if}
+        {#if isAdmin}
+            <div class="flex gap-0.5 ml-auto">
+                <Button
+                    href="/admin/edit/{post.id}"
+                    variant="ghost"
+                    size="icon"
+                    class="h-6 w-6"
+                >
+                    <PencilIcon size={14} />
+                </Button>
+                <form method="POST" action="/?/delete">
+                    <input type="hidden" name="id" value={post.id} />
+                    <Button
+                        type="submit"
+                        variant="ghost"
+                        size="icon"
+                        class="h-6 w-6 text-destructive hover:text-destructive"
+                    >
+                        <TrashIcon size={14} />
+                    </Button>
+                </form>
+            </div>
+        {/if}
     </div>
 
     <!-- markdown body -->
@@ -44,7 +88,7 @@
 				[&_h2]:text-sm [&_h2]:font-bold [&_h2]:mb-2 [&_h2]:mt-5
 				[&_h3]:text-sm [&_h3]:font-semibold [&_h3]:mb-2 [&_h3]:mt-4
 				[&>*:first-child]:mt-0
-				[&_p]:mb-3 last:[&_p]:mb-0
+				[&_p]:mb-3 [&_p]:text-justify last:[&_p]:mb-0
 				[&_ul]:list-disc [&_ul]:pl-5 [&_ul]:mb-3
 				[&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:mb-3
 				[&_li]:mb-1
@@ -59,20 +103,24 @@
         {@html post.html}
     </div>
 
+    <!-- music -->
+    {#if post.music}
+        <MusicCard music={post.music} />
+    {/if}
+
     <!-- image previews -->
     {#if imageFiles.length > 0}
         <div
             class="grid gap-2 pt-1 border-t"
-            class:grid-cols-1={imageFiles.length === 1}
-            class:grid-cols-2={imageFiles.length === 2}
-            class:grid-cols-3={imageFiles.length >= 3}
+            class:grid-cols-1={!useOverflowGrid && imageFiles.length === 1}
+            class:grid-cols-2={(!useOverflowGrid && imageFiles.length === 2) ||
+                useOverflowGrid}
+            class:grid-cols-3={!useOverflowGrid && imageFiles.length >= 3}
         >
-            {#each imageFiles as file}
-                <a
-                    href={file.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="overflow-hidden"
+            {#each gridImages as file, i}
+                <button
+                    class="overflow-hidden cursor-pointer block"
+                    onclick={() => openViewer(i)}
                 >
                     <img
                         src={file.url}
@@ -80,11 +128,31 @@
                         loading="lazy"
                         class="w-full transition-opacity hover:opacity-80 {imageFiles.length ===
                         1
-                            ? 'h-auto'
+                            ? 'max-h-96 object-cover'
                             : 'h-40 object-cover'}"
                     />
-                </a>
+                </button>
             {/each}
+
+            <!-- overflow cell -->
+            {#if useOverflowGrid}
+                <button
+                    class="relative overflow-hidden cursor-pointer block h-40 bg-muted hover:bg-muted/80 transition-colors"
+                    onclick={() => openViewer(3)}
+                >
+                    <img
+                        src={imageFiles[3].url}
+                        alt={imageFiles[3].name}
+                        loading="lazy"
+                        class="w-full h-full object-cover opacity-30"
+                    />
+                    <span
+                        class="absolute inset-0 flex items-center justify-center text-foreground font-semibold text-sm"
+                    >
+                        +{overflowCount} more
+                    </span>
+                </button>
+            {/if}
         </div>
     {/if}
 
@@ -106,22 +174,6 @@
                     {file.name}
                 </a>
             {/each}
-        </div>
-    {/if}
-
-    <!-- admin controls -->
-    {#if isAdmin}
-        <div class="flex gap-1 justify-end">
-            <Button href="/admin/edit/{post.id}" variant="ghost" size="xs"
-                ><PencilIcon />edit</Button
-            >
-            <form method="POST" action="/?/delete">
-                <input type="hidden" name="id" value={post.id} />
-                <Button type="submit" variant="destructive" size="xs">
-                    <TrashIcon />
-                    delete
-                </Button>
-            </form>
         </div>
     {/if}
 </div>
