@@ -2,7 +2,7 @@
     import { page } from "$app/stores";
     import { Button } from "$lib/components/ui/button";
     import { Link } from "$lib/components/ui/link";
-    import { ArrowLeftIcon } from "phosphor-svelte";
+    import { ArrowLeftIcon, DoorOpenIcon } from "phosphor-svelte";
 </script>
 
 <div class="mb-8 flex items-center justify-between border-b px-6 py-2">
@@ -30,6 +30,8 @@
         </nav>
     </div>
     <form method="POST" action="/admin?/logout">
-        <Button type="submit" variant="destructive" size="sm">logout</Button>
+        <Button type="submit" variant="destructive" size="sm"
+            ><DoorOpenIcon /></Button
+        >
     </form>
 </div>
