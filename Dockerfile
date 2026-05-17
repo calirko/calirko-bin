@@ -19,7 +19,9 @@ ENV NODE_ENV=production
 
 RUN apk add --no-cache ffmpeg \
  && addgroup --system --gid 1001 nodejs \
- && adduser  --system --uid 1001 sveltekit
+ && adduser  --system --uid 1001 sveltekit \
+ && mkdir -p /app/data \
+ && chown sveltekit:nodejs /app/data
 
 COPY --from=builder   --chown=sveltekit:nodejs /app/build        ./build
 COPY --from=prod-deps --chown=sveltekit:nodejs /app/node_modules ./node_modules
