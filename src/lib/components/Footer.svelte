@@ -1,10 +1,17 @@
 <script lang="ts">
-    import { GithubLogo, XLogo, TumblrLogo } from "phosphor-svelte";
+    import {
+        GithubLogo,
+        XLogo,
+        TumblrLogo,
+        GithubLogoIcon,
+        XLogoIcon,
+        TumblrLogoIcon,
+    } from "phosphor-svelte";
     import { Button } from "$lib/components/ui/button";
     const { postCount } = $props();
 </script>
 
-<footer class="border-t px-6 py-4 mt-auto">
+<footer class="border-t px-4 sm:px-6 py-4 mt-auto">
     <div class="flex items-center justify-between">
         <p class="text-xs text-muted-foreground">
             end of log. you've just read {postCount || 0} posts
@@ -18,7 +25,7 @@
                 rel="noopener noreferrer"
                 aria-label="GitHub"
             >
-                <GithubLogo size={14} />
+                <GithubLogoIcon size={14} />
             </Button>
             <Button
                 href="https://x.com/calirkoo"
@@ -28,7 +35,7 @@
                 rel="noopener noreferrer"
                 aria-label="X"
             >
-                <XLogo size={14} />
+                <XLogoIcon size={14} />
             </Button>
             <Button
                 href="https://calirko.tumblr.com"
@@ -38,7 +45,7 @@
                 rel="noopener noreferrer"
                 aria-label="Tumblr"
             >
-                <TumblrLogo size={14} />
+                <TumblrLogoIcon size={14} />
             </Button>
         </div>
     </div>

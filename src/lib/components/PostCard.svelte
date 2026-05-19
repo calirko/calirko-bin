@@ -63,15 +63,15 @@
 
 <MediaViewer urls={imageUrls} startIndex={viewerStart} bind:open={viewerOpen} />
 
-<div id="post-{post.id}" class="flex flex-col gap-4 px-6 py-4 border-b">
+<div id="post-{post.id}" class="flex flex-col gap-2 px-4 sm:px-6 py-4 border-b">
     <!-- meta row -->
-    <div class="flex items-center gap-3 text-xs text-muted-foreground">
+    <div class="flex items-center gap-2 sm:gap-3 text-xs text-muted-foreground">
         <time>
             {new Date(post.createdAt).toLocaleString()}
         </time>
         {#if post.tags.length > 0}
-            <span class="text-border">|</span>
-            <div class="flex gap-1.5 flex-wrap">
+            <span class="text-muted-foreground">•</span>
+            <div class="flex gap-1 sm:gap-1.5 flex-wrap">
                 {#each post.tags as tag}
                     <Badge href="/?tab=posts&tag={tag}" variant="outline"
                         ><span
@@ -87,7 +87,7 @@
             <Button
                 type="button"
                 onclick={copyLink}
-                size="icon-sm"
+                size="icon-xs"
                 title="Copy link"
                 variant="ghost"
             >
@@ -102,13 +102,13 @@
                 <Button
                     href="/admin/edit/{post.id}"
                     variant="ghost"
-                    size="icon-sm"
+                    size="icon-xs"
                 >
                     <PencilIcon />
                 </Button>
                 <form method="POST" action="/?/delete">
                     <input type="hidden" name="id" value={post.id} />
-                    <Button type="submit" variant="destructive" size="icon-sm">
+                    <Button type="submit" variant="destructive" size="icon-xs">
                         <TrashIcon />
                     </Button>
                 </form>

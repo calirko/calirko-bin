@@ -26,15 +26,15 @@
         : ""}
 >
     <div
-        class="content-panel max-w-2xl mx-auto bg-background min-h-screen border-x border-border flex flex-col"
+        class="content-panel max-w-2xl mx-auto bg-background min-h-screen border-none sm:border-x border-border flex flex-col"
     >
-        <header class="border-b px-6 py-4">
+        <header class="border-b px-4 sm:px-6 py-4">
             <div class="flex items-center justify-between">
                 <div>
                     <a href="/" class="font-bold text-2xl mb-1 typewriter-link"
                         ><span class="typewriter-text"
-                            ><span class="text-muted-foreground">/</span>bin<span
-                                class="text-muted-foreground">/</span
+                            ><span class="text-muted-foreground">/</span
+                            >bin<span class="text-muted-foreground">/</span
                             >calirko</span
                         ><span class="typewriter-cursor"></span></a
                     >

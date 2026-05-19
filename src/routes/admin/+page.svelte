@@ -12,6 +12,6 @@
 
 <AdminNav />
 
-<div class="px-6">
+<div class="px-4 sm:px-6">
     <PostForm action="?/create" error={form?.error} />
 </div>

@@ -9,7 +9,7 @@
     let { data }: PageProps = $props();
 </script>
 
-<nav class="flex items-center border-b px-6">
+<nav class="flex items-center border-b px-4 sm:px-6">
     <div class="flex gap-4 py-3">
         <Link
             href="/?tab=posts"
@@ -48,7 +48,7 @@
 
 {#if data.tab === "posts"}
     {#if data.filterTag}
-        <div class="mb-6 flex items-center gap-2 text-sm">
+        <div class="pl-4 sm:pl-6 py-2 border-b flex items-center gap-2 text-sm">
             <span class="text-muted-foreground">filtered by</span>
             <Badge variant="outline">#{data.filterTag}</Badge>
             <Button href="/?tab=posts" variant="ghost" size="xs">clear</Button>
@@ -65,7 +65,7 @@
         </div>
     {/if}
 {:else if data.tab === "tags"}
-    <div class="px-6 py-4">
+    <div class="px-4 sm:px-6 py-4">
         {#if data.tags.length === 0}
             <p class="text-muted-foreground text-sm">no tags yet.</p>
         {:else}
@@ -89,7 +89,7 @@
         {/if}
     </div>
 {:else if data.tab === "about"}
-    <div class="flex px-6 py-4 flex-col gap-y-2">
+    <div class="flex px-4 sm:px-6 py-4 flex-col gap-y-2">
         <b>this is /bin/calirko</b>
         <p class="text-muted-foreground text-sm">
             a place for notes, files, and things worth keeping.

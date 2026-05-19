@@ -78,7 +78,7 @@
     method="POST"
     action="?/save"
     enctype="multipart/form-data"
-    class="flex flex-col gap-6 px-6"
+    class="flex flex-col gap-6 px-4 sm:px-6"
 >
     {#if form?.error}
         <p class="text-sm text-destructive">{form.error}</p>
