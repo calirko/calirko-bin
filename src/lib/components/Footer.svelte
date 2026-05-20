@@ -11,7 +11,7 @@
     const { postCount } = $props();
 </script>
 
-<footer class="border-t px-4 sm:px-6 py-4 mt-auto">
+<footer class="border-t-2 px-4 sm:px-6 py-4 mt-auto">
     <div class="flex items-center justify-between">
         <p class="text-xs text-muted-foreground">
             end of log. you've just read {postCount || 0} posts

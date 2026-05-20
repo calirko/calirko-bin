@@ -769,7 +769,7 @@
                 type="file"
                 name="files"
                 multiple
-                accept="image/*,video/*,audio/*,.pdf,.txt,.md,.csv,.json,.zip"
+                accept="image/*,.heic,.heif,video/*,audio/*,.pdf,.txt,.md,.csv,.json,.zip"
                 onchange={onPick}
                 class="text-sm text-muted-foreground file:mr-3 file:border file:border-border file:bg-muted file:px-2 file:py-0.5 file:text-xs file:cursor-pointer"
             />

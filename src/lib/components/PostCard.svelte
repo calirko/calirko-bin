@@ -1,13 +1,11 @@
 <script lang="ts">
     import type { PostRendered } from "$lib/types";
-    import * as Card from "$lib/components/ui/card";
     import { Button } from "$lib/components/ui/button";
     import { Badge } from "$lib/components/ui/badge";
     import {
-        FileArrowDown,
+        FileArrowDownIcon,
         PencilIcon,
         TrashIcon,
-        LinkSimple,
         LinkIcon,
     } from "phosphor-svelte";
     import MediaViewer from "./MediaViewer.svelte";
@@ -63,7 +61,7 @@
 
 <MediaViewer urls={imageUrls} startIndex={viewerStart} bind:open={viewerOpen} />
 
-<div id="post-{post.id}" class="flex flex-col gap-2 px-4 sm:px-6 py-4 border-b">
+<div id="post-{post.id}" class="flex flex-col gap-2 px-4 sm:px-6 py-4">
     <!-- meta row -->
     <div class="flex items-center gap-2 sm:gap-3 text-xs text-muted-foreground">
         <time>
@@ -200,7 +198,7 @@
                     rel="noopener noreferrer"
                     class="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors w-fit"
                 >
-                    <FileArrowDown size={14} />
+                    <FileArrowDownIcon size={14} />
                     {file.name}
                 </a>
             {/each}

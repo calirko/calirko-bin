@@ -161,7 +161,7 @@
             bind:this={fileInput}
             type="file"
             name="background"
-            accept="image/*"
+            accept="image/*,.heic,.heif"
             onchange={onFileChange}
             class="text-sm text-muted-foreground file:mr-3 file:border file:border-border file:bg-muted file:px-2 file:py-0.5 file:text-xs file:cursor-pointer"
         />
