@@ -4,14 +4,36 @@
     import { Button } from "$lib/components/ui/button";
     import { Sun, Moon } from "phosphor-svelte";
     import Footer from "$lib/components/Footer.svelte";
+    import { page } from "$app/state";
     import type { LayoutProps } from "./$types";
 
     let { data, children }: LayoutProps = $props();
+
+    const title = "/bin/calirko";
+    const description = $derived(data.slogan);
+    const canonicalUrl = $derived(page.url.href);
+    const imageUrl = "https://calirko.com/favicon.png";
 </script>
 
 <svelte:head>
     <link rel="icon" href={"/favicon.png"} />
-    <title>/bin/calirko</title>
+    <link rel="canonical" href={canonicalUrl} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content="calirko" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={title} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={imageUrl} />
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageUrl} />
+
     {#if data.accentHue != null}
         {@html `<style>:root{--tint-h:${Math.round(data.accentHue)};--tint-c:0.015}</style>`}
     {/if}
