@@ -1,4 +1,5 @@
 import { Client } from 'minio';
+import { Readable } from 'stream';
 import { env } from '$env/dynamic/private';
 
 let _client: Client | null = null;
@@ -19,13 +20,6 @@ function getClient(): Client {
 
 function bucket(): string {
 	return env.MINIO_BUCKET ?? 'calirko-bin';
-}
-
-function publicUrl(): string {
-	const ssl = env.MINIO_USE_SSL === 'true';
-	const host = env.MINIO_ENDPOINT ?? 'localhost';
-	const port = env.MINIO_PORT ?? '9000';
-	return env.MINIO_PUBLIC_URL ?? `${ssl ? 'https' : 'http'}://${host}:${port}`;
 }
 
 async function init(client: Client, bucketName: string): Promise<void> {
@@ -59,5 +53,43 @@ export async function uploadFile(key: string, data: Buffer, contentType: string)
 }
 
 export function getFileUrl(key: string): string {
-	return `${publicUrl()}/${bucket()}/${key}`;
+	return `/media/${key}`;
+}
+
+export async function getFileStreamResponse(key: string, rangeHeader?: string): Promise<Response> {
+	const client = getClient();
+	const bucketName = bucket();
+	const stat = await client.statObject(bucketName, key);
+	const contentType = (stat.metaData?.['content-type'] as string | undefined) ?? 'application/octet-stream';
+	const totalSize = stat.size;
+
+	if (rangeHeader) {
+		const match = rangeHeader.match(/bytes=(\d+)-(\d*)/);
+		if (match) {
+			const start = parseInt(match[1]);
+			const end = match[2] ? parseInt(match[2]) : totalSize - 1;
+			const length = end - start + 1;
+			const nodeStream = await client.getPartialObject(bucketName, key, start, length);
+			return new Response(Readable.toWeb(nodeStream) as ReadableStream, {
+				status: 206,
+				headers: {
+					'Content-Type': contentType,
+					'Content-Range': `bytes ${start}-${end}/${totalSize}`,
+					'Content-Length': String(length),
+					'Accept-Ranges': 'bytes',
+					'Cache-Control': 'public, max-age=31536000, immutable'
+				}
+			});
+		}
+	}
+
+	const nodeStream = await client.getObject(bucketName, key);
+	return new Response(Readable.toWeb(nodeStream) as ReadableStream, {
+		headers: {
+			'Content-Type': contentType,
+			'Content-Length': String(totalSize),
+			'Accept-Ranges': 'bytes',
+			'Cache-Control': 'public, max-age=31536000, immutable'
+		}
+	});
 }
