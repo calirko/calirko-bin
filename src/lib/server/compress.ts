@@ -25,10 +25,18 @@ async function heicToPng(buffer: Buffer): Promise<Buffer> {
 
 async function toWebp(
   buffer: Buffer,
-): Promise<{ buffer: Buffer; mimeType: string; ext: string }> {
-  const png = await sharp(buffer).png().toBuffer();
-  const out = await sharp(png).webp({ quality: 82 }).toBuffer();
-  return { buffer: out, mimeType: "image/webp", ext: "webp" };
+): Promise<{ buffer: Buffer; mimeType: string; ext: string; width: number; height: number }> {
+  const resized = await sharp(buffer)
+    .resize({ width: 1400, height: 1400, fit: 'inside', withoutEnlargement: true })
+    .webp({ quality: 82 })
+    .toBuffer({ resolveWithObject: true });
+  return {
+    buffer: resized.data,
+    mimeType: "image/webp",
+    ext: "webp",
+    width: resized.info.width,
+    height: resized.info.height,
+  };
 }
 
 async function toMp4(
@@ -66,7 +74,7 @@ export async function maybeCompress(
   buffer: Buffer,
   mimeType: string,
   fileName: string,
-): Promise<{ buffer: Buffer; mimeType: string; fileName: string }> {
+): Promise<{ buffer: Buffer; mimeType: string; fileName: string; width?: number; height?: number }> {
   const base = fileName.replace(/\.[^.]+$/, "");
 
   // iOS often uploads HEIC with no MIME type — detect by extension
@@ -87,6 +95,8 @@ export async function maybeCompress(
         buffer: result.buffer,
         mimeType: result.mimeType,
         fileName: `${base}.${result.ext}`,
+        width: result.width,
+        height: result.height,
       };
     } catch {
       return { buffer, mimeType, fileName };

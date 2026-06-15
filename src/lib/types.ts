@@ -2,6 +2,8 @@ export interface PostFile {
 	key: string;
 	name: string;
 	type: string;
+	width?: number;
+	height?: number;
 }
 
 export interface Music {

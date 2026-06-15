@@ -27,19 +27,19 @@ export const actions: Actions = {
 					.filter(Boolean)
 			: [];
 
-		const uploadedFiles: { key: string; name: string; type: string }[] = [];
+		const uploadedFiles: { key: string; name: string; type: string; width?: number; height?: number }[] = [];
 
 		for (const file of fileEntries) {
 			if (!(file instanceof File) || file.size === 0) continue;
 			const raw = Buffer.from(await file.arrayBuffer());
-			const { buffer, mimeType, fileName } = await maybeCompress(
+			const { buffer, mimeType, fileName, width, height } = await maybeCompress(
 				raw,
 				file.type || 'application/octet-stream',
 				file.name
 			);
 			const key = `posts/${crypto.randomUUID()}/${fileName}`;
 			await uploadFile(key, buffer, mimeType);
-			uploadedFiles.push({ key, name: fileName, type: mimeType });
+			uploadedFiles.push({ key, name: fileName, type: mimeType, width, height });
 		}
 
 		const hasMusic = formData.get('has_music') === '1';

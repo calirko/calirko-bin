@@ -23,6 +23,10 @@
 
     const imageUrls = $derived(imageFiles.map((f) => f.url));
 
+    function imgSrc(url: string, w: number) {
+        return `${url}?w=${w}`;
+    }
+
     const useOverflowGrid = $derived(imageFiles.length > 3);
     const overflowCount = $derived(imageFiles.length - 3);
     const gridImages = $derived(
@@ -156,9 +160,11 @@
                     onclick={() => openViewer(i)}
                 >
                     <img
-                        src={file.url}
+                        src={imgSrc(file.url, imageFiles.length === 1 ? 1400 : 800)}
                         alt={file.name}
                         loading="lazy"
+                        width={file.width}
+                        height={file.height}
                         class="w-full transition-opacity hover:opacity-80 {imageFiles.length ===
                         1
                             ? 'max-h-96 object-cover'
@@ -173,9 +179,11 @@
                     onclick={() => openViewer(3)}
                 >
                     <img
-                        src={imageFiles[3].url}
+                        src={imgSrc(imageFiles[3].url, 400)}
                         alt={imageFiles[3].name}
                         loading="lazy"
+                        width={imageFiles[3].width}
+                        height={imageFiles[3].height}
                         class="w-full h-full object-cover opacity-30"
                     />
                     <span

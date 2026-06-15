@@ -56,6 +56,19 @@ export function getFileUrl(key: string): string {
 	return `/media/${key}`;
 }
 
+export async function getFileBuffer(key: string): Promise<{ buffer: Buffer; contentType: string }> {
+	const client = getClient();
+	const bucketName = bucket();
+	const stat = await client.statObject(bucketName, key);
+	const contentType = (stat.metaData?.['content-type'] as string | undefined) ?? 'application/octet-stream';
+	const stream = await client.getObject(bucketName, key);
+	const chunks: Buffer[] = [];
+	for await (const chunk of stream) {
+		chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
+	}
+	return { buffer: Buffer.concat(chunks), contentType };
+}
+
 export async function getFileStreamResponse(key: string, rangeHeader?: string): Promise<Response> {
 	const client = getClient();
 	const bucketName = bucket();
