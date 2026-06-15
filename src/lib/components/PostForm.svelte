@@ -15,7 +15,6 @@
         X,
         MusicNote,
     } from "phosphor-svelte";
-    cc;
     import Combobox, { type ComboboxItem } from "./Combobox.svelte";
     import * as ContextMenu from "$lib/components/ui/context-menu";
     import {
