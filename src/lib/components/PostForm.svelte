@@ -332,7 +332,6 @@
             musicTitle = item.label;
             musicCoverUrl = getImage(
                 raw.image as { size: string; "#text": string }[],
-                "extralarge",
                 "large",
                 "medium",
             );

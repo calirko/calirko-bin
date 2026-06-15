@@ -18,9 +18,6 @@
 <svelte:head>
     <link rel="icon" href={"/favicon.png"} />
     <link rel="canonical" href={canonicalUrl} />
-    {#if data.backgroundUrl}
-        <link rel="preload" href={data.backgroundUrl} as="image" fetchpriority="high" />
-    {/if}
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="author" content="calirko" />

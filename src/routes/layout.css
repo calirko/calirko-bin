@@ -147,10 +147,10 @@
 
 @keyframes typewriter {
     from {
-        clip-path: inset(0 100% 0 0);
+        width: 0;
     }
     to {
-        clip-path: inset(0 0% 0 0);
+        width: 12ch;
     }
 }
 
@@ -173,8 +173,7 @@
     display: inline-block;
     overflow: hidden;
     white-space: nowrap;
-    width: 12ch;
-    clip-path: inset(0 100% 0 0);
+    width: 0;
     animation: typewriter 0.6s steps(12, end) 0.2s forwards;
 }
 

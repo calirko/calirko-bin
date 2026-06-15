@@ -37,7 +37,8 @@ export const actions: Actions = {
 				file.type || 'application/octet-stream',
 				file.name
 			);
-			const key = `posts/${crypto.randomUUID()}/${fileName}`;
+			const ext = fileName.split('.').pop() ?? 'bin';
+			const key = `posts/${crypto.randomUUID()}/file.${ext}`;
 			await uploadFile(key, buffer, mimeType);
 			uploadedFiles.push({ key, name: fileName, type: mimeType, width, height });
 		}

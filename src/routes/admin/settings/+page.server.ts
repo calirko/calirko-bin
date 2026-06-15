@@ -38,7 +38,8 @@ export const actions: Actions = {
 				bgFile.type || 'application/octet-stream',
 				bgFile.name
 			);
-			const key = `settings/background-${crypto.randomUUID()}/${fileName}`;
+			const ext = fileName.split('.').pop() ?? 'webp';
+			const key = `settings/background-${crypto.randomUUID()}/bg.${ext}`;
 			await uploadFile(key, buffer, mimeType);
 			patch.backgroundKey = key;
 		}
