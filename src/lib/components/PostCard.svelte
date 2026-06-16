@@ -23,6 +23,10 @@
 
     const imageUrls = $derived(imageFiles.map((f) => f.url));
 
+    const bloomSrc = $derived(
+        imageFiles.length > 0 ? imgSrc(imageFiles[0].url, 64) : null,
+    );
+
     function imgSrc(url: string, w: number) {
         return `${url}?w=${w}`;
     }
@@ -65,7 +69,17 @@
 
 <MediaViewer urls={imageUrls} startIndex={viewerStart} bind:open={viewerOpen} />
 
-<div id="post-{post.id}" class="flex flex-col gap-2 px-4 sm:px-6 py-4">
+<div
+    id="post-{post.id}"
+    class="relative isolate overflow-hidden flex flex-col gap-2 px-4 sm:px-6 py-4"
+>
+    <!-- bloom: first image blurred behind everything -->
+    {#if bloomSrc}
+        <div class="bloom" aria-hidden="true">
+            <img src={bloomSrc} alt="" loading="lazy" />
+        </div>
+    {/if}
+
     <!-- meta row -->
     <div class="flex items-center gap-2 sm:gap-3 text-xs text-muted-foreground">
         <time>
@@ -160,7 +174,10 @@
                     onclick={() => openViewer(i)}
                 >
                     <img
-                        src={imgSrc(file.url, imageFiles.length === 1 ? 1400 : 800)}
+                        src={imgSrc(
+                            file.url,
+                            imageFiles.length === 1 ? 1400 : 800,
+                        )}
                         alt={file.name}
                         loading="lazy"
                         width={file.width}
@@ -240,5 +257,41 @@
 
     :global(.post-highlight) {
         animation: post-highlight 1.6s ease;
+    }
+
+    .bloom {
+        position: absolute;
+        inset: 0;
+        z-index: -10;
+        overflow: hidden;
+        pointer-events: none;
+    }
+
+    .bloom img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: blur(15px) saturate(1.2);
+        transform: scale(1.2);
+        opacity: 0.35;
+    }
+
+    /* fade the bloom toward the card edges so it reads as a soft glow,
+       biased downward to sit roughly behind the image area */
+    .bloom::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+            ellipse at 50% 72%,
+            transparent 10%,
+            var(--color-background, #000) 100%
+        );
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .bloom img {
+            transition: opacity 0.4s ease;
+        }
     }
 </style>

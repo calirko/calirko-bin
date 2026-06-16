@@ -129,6 +129,7 @@
     }
     html {
         @apply font-mono;
+        scrollbar-gutter: stable;
     }
 }
 
@@ -154,19 +155,19 @@
     }
 }
 
-@keyframes cursor-blink {
-    0%,
-    100% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0;
-    }
-}
-
 .typewriter-link {
     display: inline-flex;
     align-items: center;
+}
+
+.emote-face {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    pointer-events: none;
 }
 
 .typewriter-text {
@@ -177,13 +178,3 @@
     animation: typewriter 0.6s steps(12, end) 0.2s forwards;
 }
 
-.typewriter-cursor {
-    display: inline-block;
-    width: 0.5em;
-    height: 0.82em;
-    background-color: currentColor;
-    margin-left: 2px;
-    vertical-align: -0.08em;
-    animation: cursor-blink 1s step-end infinite;
-    transition: 100ms ease-in-out;
-}

@@ -5,9 +5,57 @@
     import { Sun, Moon } from "phosphor-svelte";
     import Footer from "$lib/components/Footer.svelte";
     import { page } from "$app/state";
+    import { onDestroy } from "svelte";
     import type { LayoutProps } from "./$types";
 
     let { data, children }: LayoutProps = $props();
+
+    // easter egg: flicker through furry emotes when the title is hovered/focused
+    const faces = [
+        "⚞^. .^⚟",
+        "ฅ^•ﻌ•^ฅ",
+        "(=^･ω･^=)",
+        "/ᐠ｡ꞈ｡ᐟ\\",
+        "ʕ•ᴥ•ʔ",
+        "(•ᴥ•)",
+        "=^._.^=",
+        "(=｀ω´=)",
+        "^•ﻌ•^",
+        "(ↀᴥↀ)",
+        "(=ↀωↀ=)",
+        "ᘛ⁐̤ᕐᐷ",
+    ];
+
+    let emoting = $state(false);
+    let faceIndex = $state(0);
+    let timer: ReturnType<typeof setInterval> | null = null;
+
+    function startEmote() {
+        emoting = true;
+        if (
+            window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ||
+            timer
+        )
+            return; // reduced motion: show one static face, no flicker
+        timer = setInterval(() => {
+            let next = faceIndex;
+            while (next === faceIndex && faces.length > 1)
+                next = Math.floor(Math.random() * faces.length);
+            faceIndex = next;
+        }, 75);
+    }
+
+    function stopEmote() {
+        emoting = false;
+        if (timer) {
+            clearInterval(timer);
+            timer = null;
+        }
+    }
+
+    onDestroy(() => {
+        if (timer) clearInterval(timer);
+    });
 
     const title = "/bin/calirko";
     const description = $derived(data.slogan);
@@ -53,12 +101,20 @@
         <header class="border-b-2 px-4 sm:px-6 py-4">
             <div class="flex items-center justify-between">
                 <div>
-                    <a href="/" class="font-bold text-2xl mb-1 typewriter-link"
-                        ><span class="typewriter-text"
+                    <a
+                        href="/"
+                        class="font-bold text-2xl mb-1 typewriter-link relative"
+                        onmouseenter={startEmote}
+                        onmouseleave={stopEmote}
+                        onfocus={startEmote}
+                        onblur={stopEmote}
+                        ><span class="typewriter-text" class:opacity-0={emoting}
                             ><span class="text-muted-foreground">/</span
                             >bin<span class="text-muted-foreground">/</span
                             >calirko</span
-                        ><span class="typewriter-cursor"></span></a
+                        >{#if emoting}<span class="emote-face" aria-hidden="true"
+                                >{faces[faceIndex]}</span
+                            >{/if}</a
                     >
                     <p class="text-xs text-muted-foreground mt-0.5">
                         {data.slogan}
