@@ -1,12 +1,12 @@
 import { fail, redirect } from '@sveltejs/kit';
-import { createPost } from '$lib/server/db';
+import { createPost, getAllTags } from '$lib/server/db';
 import { uploadFile, getFileUrl } from '$lib/server/storage';
 import { maybeCompress } from '$lib/server/compress';
 import { SESSION_COOKIE } from '$lib/server/auth';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async () => {
-	return {};
+	return { allTags: await getAllTags() };
 };
 
 export const actions: Actions = {

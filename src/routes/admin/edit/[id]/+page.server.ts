@@ -1,5 +1,5 @@
 import { error, fail, redirect } from '@sveltejs/kit';
-import { getPost, updatePost } from '$lib/server/db';
+import { getPost, updatePost, getAllTags } from '$lib/server/db';
 import { uploadFile } from '$lib/server/storage';
 import { maybeCompress } from '$lib/server/compress';
 import { SESSION_COOKIE } from '$lib/server/auth';
@@ -8,7 +8,7 @@ import type { Actions, PageServerLoad } from './$types';
 export const load: PageServerLoad = async ({ params }) => {
 	const post = await getPost(params.id);
 	if (!post) error(404, 'post not found');
-	return { post };
+	return { post, allTags: await getAllTags() };
 };
 
 export const actions: Actions = {

@@ -1,9 +1,9 @@
 <script lang="ts">
-    import type { ActionData } from "./$types";
+    import type { ActionData, PageData } from "./$types";
     import PostForm from "$lib/components/PostForm.svelte";
     import AdminNav from "$lib/components/AdminNav.svelte";
 
-    let { form }: { form: ActionData } = $props();
+    let { data, form }: { data: PageData; form: ActionData } = $props();
 </script>
 
 <svelte:head>
@@ -13,5 +13,5 @@
 <AdminNav />
 
 <div class="px-4 sm:px-6">
-    <PostForm action="?/create" error={form?.error} />
+    <PostForm action="?/create" error={form?.error} allTags={data.allTags} />
 </div>

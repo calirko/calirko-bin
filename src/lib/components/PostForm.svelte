@@ -37,11 +37,67 @@
         post,
         action,
         error,
+        allTags = [],
     }: {
         post?: Post;
         action: string;
         error?: string;
+        allTags?: { name: string; count: number }[];
     } = $props();
+
+    // tags
+    let tags = $state<string[]>(untrack(() => [...(post?.tags ?? [])]));
+    let tagInput = $state("");
+    let tagOpen = $state(false);
+    let tagActive = $state(0);
+
+    const tagSuggestions = $derived.by(() => {
+        const q = tagInput.trim().toLowerCase();
+        const available = allTags.filter((t) => !tags.includes(t.name));
+        if (!q) return available.slice(0, 8);
+        return available
+            .filter((t) => t.name.toLowerCase().includes(q))
+            .slice(0, 8);
+    });
+
+    const exactExists = $derived(
+        allTags.some((t) => t.name === tagInput.trim().toLowerCase()),
+    );
+
+    function addTag(raw: string) {
+        const t = raw.trim().toLowerCase();
+        if (!t) return;
+        if (!tags.includes(t)) tags = [...tags, t];
+        tagInput = "";
+        tagActive = 0;
+        tagOpen = false;
+    }
+
+    function removeTag(t: string) {
+        tags = tags.filter((x) => x !== t);
+    }
+
+    function onTagKeydown(e: KeyboardEvent) {
+        if (e.key === "Enter" || e.key === ",") {
+            e.preventDefault();
+            if (tagOpen && tagSuggestions[tagActive]) {
+                addTag(tagSuggestions[tagActive].name);
+            } else {
+                addTag(tagInput);
+            }
+        } else if (e.key === "Backspace" && !tagInput && tags.length) {
+            tags = tags.slice(0, -1);
+        } else if (e.key === "ArrowDown") {
+            e.preventDefault();
+            tagOpen = true;
+            tagActive = Math.min(tagActive + 1, tagSuggestions.length - 1);
+        } else if (e.key === "ArrowUp") {
+            e.preventDefault();
+            tagActive = Math.max(tagActive - 1, 0);
+        } else if (e.key === "Escape") {
+            tagOpen = false;
+        }
+    }
 
     let selectedFiles = $state<File[]>([]);
     let submitting = $state(false);
@@ -537,13 +593,79 @@
 
         <div class="flex flex-col gap-1.5">
             <Label for="tags">tags</Label>
-            <Input
-                id="tags"
-                name="tags"
-                type="text"
-                placeholder="dev, notes, misc"
-                value={post?.tags.join(", ") ?? ""}
-            />
+            <input type="hidden" name="tags" value={tags.join(", ")} />
+            <div class="relative">
+                <div
+                    class="dynround flex flex-wrap items-center gap-1 rounded-md border border-input px-2 py-1.5 dark:bg-input/30 focus-within:ring-1 focus-within:ring-ring"
+                >
+                    {#each tags as tag (tag)}
+                        <span
+                            class="flex items-center gap-1 rounded-sm bg-muted px-1.5 py-0.5 text-xs"
+                        >
+                            {tag}
+                            <button
+                                type="button"
+                                onclick={() => removeTag(tag)}
+                                class="text-muted-foreground hover:text-foreground"
+                                aria-label="remove {tag}"
+                            >
+                                <X size={10} />
+                            </button>
+                        </span>
+                    {/each}
+                    <input
+                        id="tags"
+                        bind:value={tagInput}
+                        oninput={() => {
+                            tagOpen = true;
+                            tagActive = 0;
+                        }}
+                        onkeydown={onTagKeydown}
+                        onfocus={() => (tagOpen = true)}
+                        onblur={() =>
+                            setTimeout(() => (tagOpen = false), 120)}
+                        autocomplete="off"
+                        placeholder={tags.length ? "" : "dev, notes, misc"}
+                        class="min-w-[6rem] flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+                    />
+                </div>
+
+                {#if tagOpen && (tagSuggestions.length > 0 || (tagInput.trim() && !exactExists))}
+                    <div
+                        class="absolute z-20 mt-1 w-full overflow-hidden rounded-md border border-border bg-popover py-1 shadow-md"
+                    >
+                        {#each tagSuggestions as s, i (s.name)}
+                            <button
+                                type="button"
+                                onmousedown={(e) => {
+                                    e.preventDefault();
+                                    addTag(s.name);
+                                }}
+                                onmouseenter={() => (tagActive = i)}
+                                class="flex w-full items-center justify-between px-2 py-1 text-left text-xs {i ===
+                                tagActive
+                                    ? 'bg-muted'
+                                    : ''}"
+                            >
+                                <span>{s.name}</span>
+                                <span class="text-muted-foreground">{s.count}</span>
+                            </button>
+                        {/each}
+                        {#if tagInput.trim() && !exactExists}
+                            <button
+                                type="button"
+                                onmousedown={(e) => {
+                                    e.preventDefault();
+                                    addTag(tagInput);
+                                }}
+                                class="flex w-full items-center gap-1 border-t border-border px-2 py-1 text-left text-xs text-muted-foreground hover:text-foreground"
+                            >
+                                create “{tagInput.trim().toLowerCase()}”
+                            </button>
+                        {/if}
+                    </div>
+                {/if}
+            </div>
         </div>
 
         <!-- music section -->

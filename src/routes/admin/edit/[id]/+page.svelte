@@ -14,5 +14,10 @@
 <AdminNav />
 
 <div class="px-4 sm:px-6">
-    <PostForm post={data.post} action="?/update" error={form?.error} />
+    <PostForm
+        post={data.post}
+        action="?/update"
+        error={form?.error}
+        allTags={data.allTags}
+    />
 </div>
