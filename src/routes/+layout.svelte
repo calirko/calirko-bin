@@ -5,6 +5,7 @@
     import { Sun, Moon } from "phosphor-svelte";
     import Footer from "$lib/components/Footer.svelte";
     import { page } from "$app/state";
+    import { browser } from "$app/environment";
     import { onDestroy } from "svelte";
     import type { LayoutProps } from "./$types";
 
@@ -55,6 +56,51 @@
 
     onDestroy(() => {
         if (timer) clearInterval(timer);
+    });
+
+    // time-on-page beacon: measure visible dwell time and report it per pageview.
+    // Re-runs on client-side navigation (keyed on pathname); cookieless.
+    $effect(() => {
+        if (!browser) return;
+        const path = page.url.pathname; // tracked dep — restarts on SPA nav
+        let activeSince = Date.now();
+        let accrued = 0;
+        let sent = false;
+
+        const flush = () => {
+            if (sent) return;
+            sent = true;
+            const ms =
+                accrued +
+                (document.visibilityState === "visible"
+                    ? Date.now() - activeSince
+                    : 0);
+            if (ms <= 0) return;
+            navigator.sendBeacon?.(
+                "/api/analytics/beacon",
+                new Blob([JSON.stringify({ path, ms })], { type: "text/plain" }),
+            );
+        };
+
+        const onVisibility = () => {
+            if (document.visibilityState === "hidden") {
+                accrued += Date.now() - activeSince;
+                flush();
+            } else {
+                activeSince = Date.now();
+                sent = false; // returned to tab — allow a fresh flush later
+            }
+        };
+
+        document.addEventListener("visibilitychange", onVisibility);
+        // pagehide is more reliable than unload on mobile/bfcache
+        window.addEventListener("pagehide", flush);
+
+        return () => {
+            flush();
+            document.removeEventListener("visibilitychange", onVisibility);
+            window.removeEventListener("pagehide", flush);
+        };
     });
 
     const title = "/bin/calirko";

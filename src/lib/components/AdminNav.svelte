@@ -27,6 +27,14 @@
             >
                 settings
             </Link>
+            <Link
+                href="/admin/analytics"
+                class={$page.url.pathname === "/admin/analytics"
+                    ? "text-foreground"
+                    : "text-muted-foreground hover:text-foreground"}
+            >
+                analytics
+            </Link>
         </nav>
     </div>
     <form method="POST" action="/admin?/logout">

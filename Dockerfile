@@ -13,7 +13,8 @@ COPY . .
 RUN bun run build
 
 # ---- runtime ----
-FROM node:22-alpine AS runner
+# node 24: built-in node:sqlite (used for traffic analytics) is available without a flag
+FROM node:24-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 
