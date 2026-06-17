@@ -38,12 +38,13 @@ services:
         aliases:
           - calirko-bin
     healthcheck:
+      # UA is tagged so analytics (BOT_RE in capture.ts) skips these probes.
       test:
         [
           "CMD",
           "node",
           "-e",
-          "fetch('http://localhost:3000/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+          "fetch('http://localhost:3000/',{headers:{'user-agent':'calirko-healthcheck'}}).then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
         ]
       interval: 30s
       timeout: 10s

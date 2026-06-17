@@ -17,7 +17,7 @@ const SKIP_EXT =
   /\.(?:js|css|map|png|jpe?g|webp|avif|gif|svg|ico|woff2?|ttf|mp4|webm|mp3|json|txt|xml)$/i;
 
 const BOT_RE =
-  /bot|crawl|spider|slurp|bingpreview|facebookexternalhit|embedly|quora|pinterest|vkshare|whatsapp|telegram|discord|headless|lighthouse|pingdom|uptime|monitor|curl|wget|python-requests|go-http|axios|node-fetch/i;
+  /bot|crawl|spider|slurp|bingpreview|facebookexternalhit|embedly|quora|pinterest|vkshare|whatsapp|telegram|discord|headless|lighthouse|pingdom|uptime|monitor|healthcheck|curl|wget|python-requests|go-http|axios|node-fetch/i;
 
 export function shouldTrack(event: RequestEvent, response: Response): boolean {
   const p = event.url.pathname;
