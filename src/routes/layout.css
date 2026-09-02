@@ -21,7 +21,7 @@
     --accent: oklch(0.97 var(--tint-c, 0) var(--tint-h, 0));
     --accent-foreground: oklch(0.205 var(--tint-c, 0) var(--tint-h, 0));
     --destructive: oklch(0.6044 0.0913 27.32);
-    --border: oklch(0.922 var(--tint-c, 0) var(--tint-h, 0));
+    --border: transparent;
     --input: oklch(0.922 var(--tint-c, 0) var(--tint-h, 0));
     --ring: oklch(0.708 var(--tint-c, 0) var(--tint-h, 0));
     --chart-1: oklch(0.87 var(--tint-c, 0) var(--tint-h, 0));
@@ -58,7 +58,7 @@
     --accent: oklch(0.269 var(--tint-c, 0) var(--tint-h, 0));
     --accent-foreground: oklch(0.985 var(--tint-c, 0) var(--tint-h, 0));
     --destructive: oklch(0.5515 0.074 27.32);
-    --border: oklch(1 var(--tint-c, 0) var(--tint-h, 0) / 10%);
+    --border: transparent;
     --input: oklch(1 var(--tint-c, 0) var(--tint-h, 0) / 15%);
     --ring: oklch(0.556 var(--tint-c, 0) var(--tint-h, 0));
     --chart-1: oklch(0.87 var(--tint-c, 0) var(--tint-h, 0));
@@ -125,7 +125,15 @@
         @apply border-border outline-ring/50;
     }
     body {
-        @apply bg-background text-foreground;
+        @apply text-foreground;
+        background-color: var(--background);
+        background-image: linear-gradient(
+            160deg,
+            color-mix(in oklch, var(--background), white 4%) 0%,
+            var(--background) 45%,
+            color-mix(in oklch, var(--background), black 3%) 100%
+        );
+        background-attachment: fixed;
     }
     html {
         @apply font-mono;
