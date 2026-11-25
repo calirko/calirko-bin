@@ -6,7 +6,7 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-    --background: oklch(1 var(--tint-c, 0) var(--tint-h, 0));
+    --background: #fff;
     --foreground: oklch(0.145 var(--tint-c, 0) var(--tint-h, 0));
     --card: oklch(1 var(--tint-c, 0) var(--tint-h, 0));
     --card-foreground: oklch(0.145 var(--tint-c, 0) var(--tint-h, 0));
@@ -43,7 +43,7 @@
 }
 
 .dark {
-    --background: oklch(0.145 var(--tint-c, 0) var(--tint-h, 0));
+    --background: #000;
     --foreground: oklch(0.985 var(--tint-c, 0) var(--tint-h, 0));
     --card: oklch(0.205 var(--tint-c, 0) var(--tint-h, 0));
     --card-foreground: oklch(0.985 var(--tint-c, 0) var(--tint-h, 0));
@@ -127,13 +127,6 @@
     body {
         @apply text-foreground;
         background-color: var(--background);
-        background-image: linear-gradient(
-            160deg,
-            color-mix(in oklch, var(--background), white 4%) 0%,
-            var(--background) 45%,
-            color-mix(in oklch, var(--background), black 3%) 100%
-        );
-        background-attachment: fixed;
     }
     html {
         @apply font-mono;
@@ -141,17 +134,18 @@
     }
 }
 
-.dotted-bg {
-    background-image: radial-gradient(
-        circle,
-        color-mix(in oklch, var(--muted-foreground) 22%, transparent) 1.5px,
-        transparent 1.5px
-    );
-    background-size: 20px 20px;
+/* minimal: sharp edges, no shadows, no blur anywhere */
+*,
+*::before,
+*::after {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    backdrop-filter: none !important;
 }
 
-.dynround {
-    border-radius: 4px;
+:focus-visible {
+    outline: 1px solid var(--ring);
 }
 
 @keyframes typewriter {

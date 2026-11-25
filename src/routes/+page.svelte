@@ -9,7 +9,7 @@
     let { data }: PageProps = $props();
 </script>
 
-<nav class="flex items-center border-b-2 px-4 sm:px-6">
+<nav class="flex items-center px-4 sm:px-6">
     <div class="flex gap-4 py-3">
         <Link
             href="/?tab=posts"
@@ -48,7 +48,7 @@
 
 {#if data.tab === "posts"}
     {#if data.filterTag}
-        <div class="pl-4 sm:pl-6 py-2 border-b flex items-center gap-2 text-sm">
+        <div class="pl-4 sm:pl-6 py-2 flex items-center gap-2 text-sm">
             <span class="text-muted-foreground">filtered by</span>
             <Badge variant="outline">#{data.filterTag}</Badge>
             <Button href="/?tab=posts" variant="ghost" size="xs">clear</Button>
@@ -59,11 +59,8 @@
         <p class="text-muted-foreground text-sm">no posts yet.</p>
     {:else}
         <div class="flex flex-col">
-            {#each data.posts as post, index}
+            {#each data.posts as post}
                 <PostCard {post} isAdmin={data.isAdmin} />
-                {#if index !== data.posts.length - 1}
-                    <div class="border-t-2 w-full"></div>
-                {/if}
             {/each}
         </div>
     {/if}

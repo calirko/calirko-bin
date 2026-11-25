@@ -23,10 +23,6 @@
 
     const imageUrls = $derived(imageFiles.map((f) => f.url));
 
-    const bloomSrc = $derived(
-        imageFiles.length > 0 ? imgSrc(imageFiles[0].url, 64) : null,
-    );
-
     function imgSrc(url: string, w: number) {
         return `${url}?w=${w}`;
     }
@@ -71,22 +67,14 @@
 
 <div
     id="post-{post.id}"
-    class="relative isolate overflow-hidden flex flex-col gap-2 px-4 sm:px-6 py-4"
+    class="group relative flex flex-col gap-2 px-4 sm:px-6 py-4"
 >
-    <!-- bloom: first image blurred behind everything -->
-    {#if bloomSrc}
-        <div class="bloom" aria-hidden="true">
-            <img src={bloomSrc} alt="" loading="lazy" />
-        </div>
-    {/if}
-
     <!-- meta row -->
     <div class="flex items-center gap-2 sm:gap-3 text-xs text-muted-foreground">
         <time>
             {new Date(post.createdAt).toLocaleString()}
         </time>
         {#if post.tags.length > 0}
-            <span class="text-muted-foreground">•</span>
             <div class="flex gap-1 sm:gap-1.5 flex-wrap">
                 {#each post.tags as tag}
                     <Badge href="/?tab=posts&tag={tag}" variant="outline"
@@ -106,6 +94,9 @@
                 size="icon-xs"
                 title="Copy link"
                 variant="ghost"
+                class={copied
+                    ? ""
+                    : "opacity-0 group-hover:opacity-100 focus-visible:opacity-100 [@media(hover:none)]:opacity-100"}
             >
                 {#if copied}
                     <span class="text-[10px] leading-none">copied</span>
@@ -144,12 +135,12 @@
 				[&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:mb-3
 				[&_li]:mb-1
 				[&_pre]:bg-muted [&_pre]:p-3 [&_pre]:overflow-x-auto [&_pre]:mb-3 [&_pre]:text-xs
-				[&_code]:bg-muted [&_code]:px-1 [&_code]:text-xs [&_code]:dynround
-				[&_pre_code]:bg-transparent [&_pre_code]:p-0 [&_pre_code]:dynround
-				[&_blockquote]:border-l-2 [&_blockquote]:pl-4 [&_blockquote]:text-muted-foreground [&_blockquote]:mb-3
+				[&_code]:bg-muted [&_code]:px-1 [&_code]:text-xs
+				[&_pre_code]:bg-transparent [&_pre_code]:p-0
+				[&_blockquote]:pl-4 [&_blockquote]:text-muted-foreground [&_blockquote]:mb-3
 				[&_a]:underline [&_a]:underline-offset-2
 				[&_img]:max-w-full [&_img]:h-auto [&_img]:my-3
-				[&_hr]:border-border [&_hr]:my-6"
+				[&_hr]:border-0 [&_hr]:my-6"
     >
         {@html post.html}
     </div>
@@ -170,7 +161,7 @@
         >
             {#each gridImages as file, i}
                 <button
-                    class="overflow-hidden cursor-pointer block dynround"
+                    class="overflow-hidden cursor-pointer block"
                     onclick={() => openViewer(i)}
                 >
                     <img
@@ -192,7 +183,7 @@
 
             {#if useOverflowGrid}
                 <button
-                    class="relative overflow-hidden dynround cursor-pointer block h-40 bg-muted hover:bg-muted/80 transition-colors"
+                    class="relative overflow-hidden cursor-pointer block h-40 bg-muted hover:bg-muted/80 transition-colors"
                     onclick={() => openViewer(3)}
                 >
                     <img
@@ -259,39 +250,4 @@
         animation: post-highlight 1.6s ease;
     }
 
-    .bloom {
-        position: absolute;
-        inset: 0;
-        z-index: -10;
-        overflow: hidden;
-        pointer-events: none;
-    }
-
-    .bloom img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        filter: blur(15px) saturate(1.2);
-        transform: scale(1.2);
-        opacity: 0.35;
-    }
-
-    /* fade the bloom toward the card edges so it reads as a soft glow,
-       biased downward to sit roughly behind the image area */
-    .bloom::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: radial-gradient(
-            ellipse at 50% 72%,
-            transparent 10%,
-            var(--color-background, #000) 100%
-        );
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        .bloom img {
-            transition: opacity 0.4s ease;
-        }
-    }
 </style>

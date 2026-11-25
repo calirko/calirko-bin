@@ -11,7 +11,7 @@
     let { music }: { music: Music } = $props();
 </script>
 
-<div class="flex items-center gap-3 border dynround overflow-hidden">
+<div class="flex items-center gap-3 bg-muted overflow-hidden">
     <!-- cover art -->
     <div class="shrink-0 h-16 w-16 bg-muted overflow-hidden">
         {#if music.coverUrl}

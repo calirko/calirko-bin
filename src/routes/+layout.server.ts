@@ -1,5 +1,4 @@
 import { getPostCount, getSettings } from "$lib/server/db";
-import { getFileUrl } from "$lib/server/storage";
 import type { LayoutServerLoad } from "./$types";
 
 function hexToHue(hex: string): number | null {
@@ -31,9 +30,6 @@ export const load: LayoutServerLoad = async () => {
 
   return {
     slogan: settings.slogan,
-    backgroundUrl: settings.backgroundKey
-      ? `${getFileUrl(settings.backgroundKey)}?w=1920`
-      : null,
     accentHue,
     postCount,
   };

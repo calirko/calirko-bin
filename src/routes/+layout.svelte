@@ -110,7 +110,12 @@
 </script>
 
 <svelte:head>
-    <link rel="icon" href={"/favicon.png"} />
+    <link
+        rel="icon"
+        href={mode.current === "light"
+            ? "/favicon-light.png"
+            : "/favicon-dark.png"}
+    />
     <link rel="canonical" href={canonicalUrl} />
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -135,16 +140,8 @@
 
 <ModeWatcher />
 
-<div
-    class="min-h-screen bg-background {data.backgroundUrl ? '' : 'dotted-bg'}"
-    style={data.backgroundUrl
-        ? `background-image: url('${data.backgroundUrl}'); background-size: cover; background-position: center; background-attachment: fixed;`
-        : ""}
->
-    <div
-        class="content-panel max-w-2xl mx-auto bg-background min-h-screen border-0 sm:border-x-2 flex flex-col"
-    >
-        <header class="border-b-2 px-4 sm:px-6 py-4">
+<div class="max-w-2xl mx-auto min-h-screen flex flex-col">
+        <header class="px-4 sm:px-6 py-4">
             <div class="flex items-center justify-between">
                 <div>
                     <a
@@ -186,5 +183,4 @@
         </main>
 
         <Footer postCount={data.postCount} />
-    </div>
 </div>
