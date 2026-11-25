@@ -86,7 +86,7 @@
                     <button
                         class="shrink-0 h-14 w-14 overflow-hidden transition-opacity cursor-pointer
                                {i === current
-                            ? 'ring-2 ring-white opacity-100'
+                            ? 'opacity-100'
                             : 'opacity-40 hover:opacity-70'}"
                         onclick={() => (current = i)}
                         aria-label="Go to image {i + 1}"

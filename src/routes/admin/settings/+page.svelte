@@ -94,7 +94,7 @@
             name="slogan"
             type="text"
             value={data.slogan}
-            class="border border-input bg-background px-3 py-1.5 text-sm w-full focus:outline-none focus:ring-1 focus:ring-ring"
+            class="bg-muted px-3 py-1.5 text-sm w-full"
         />
     </div>
 
@@ -107,7 +107,7 @@
                 name="accentColor"
                 type="color"
                 bind:value={accentColor}
-                class="h-8 w-12 cursor-pointer border border-input bg-background p-0.5"
+                class="h-8 w-12 cursor-pointer bg-muted p-0.5"
             />
             {#if accentColor}
                 <span class="text-xs text-muted-foreground">{accentColor}</span>

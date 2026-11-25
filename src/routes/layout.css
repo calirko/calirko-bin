@@ -10,7 +10,7 @@
     --foreground: oklch(0.145 var(--tint-c, 0) var(--tint-h, 0));
     --card: oklch(1 var(--tint-c, 0) var(--tint-h, 0));
     --card-foreground: oklch(0.145 var(--tint-c, 0) var(--tint-h, 0));
-    --popover: oklch(1 var(--tint-c, 0) var(--tint-h, 0));
+    --popover: oklch(0.97 var(--tint-c, 0) var(--tint-h, 0));
     --popover-foreground: oklch(0.145 var(--tint-c, 0) var(--tint-h, 0));
     --primary: oklch(0.205 var(--tint-c, 0) var(--tint-h, 0));
     --primary-foreground: oklch(0.985 var(--tint-c, 0) var(--tint-h, 0));
@@ -139,6 +139,7 @@
 *::before,
 *::after {
     border-radius: 0 !important;
+    border-color: transparent !important;
     box-shadow: none !important;
     text-shadow: none !important;
     backdrop-filter: none !important;

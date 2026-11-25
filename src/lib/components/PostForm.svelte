@@ -482,7 +482,7 @@
         <div class="flex flex-col gap-0">
             <!-- toolbar -->
             <div
-                class="mb-2 flex items-center gap-0.5 flex-wrap border dark:bg-input/30 px-1.5 py-1 rounded-t-md"
+                class="mb-2 flex items-center gap-0.5 flex-wrap border bg-muted dark:bg-input/30 px-1.5 py-1 rounded-t-md"
             >
                 {@render tbtn("bold", TextB, "Bold (** **)")}
                 {@render tbtn("italic", TextItalic, "Italic (_ _)")}
@@ -596,7 +596,7 @@
             <input type="hidden" name="tags" value={tags.join(", ")} />
             <div class="relative">
                 <div
-                    class="flex flex-wrap items-center gap-1 rounded-md border border-input px-2 py-1.5 dark:bg-input/30 focus-within:ring-1 focus-within:ring-ring"
+                    class="flex flex-wrap items-center gap-1 rounded-md border border-input px-2 py-1.5 bg-muted dark:bg-input/30 focus-within:ring-1 focus-within:ring-ring"
                 >
                     {#each tags as tag (tag)}
                         <span

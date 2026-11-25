@@ -52,9 +52,9 @@
     {/if}
 
     <!-- summary tiles -->
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-px bg-border border border-border">
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-px">
         {#each stats as s (s.label)}
-            <div class="bg-background p-3 flex flex-col gap-0.5">
+            <div class="bg-muted p-3 flex flex-col gap-0.5">
                 <span class="text-xl font-medium tabular-nums">{s.value}</span>
                 <span class="text-xs text-muted-foreground">{s.label}</span>
             </div>

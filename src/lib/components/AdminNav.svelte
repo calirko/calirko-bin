@@ -5,7 +5,7 @@
     import { ArrowLeftIcon, DoorOpenIcon } from "phosphor-svelte";
 </script>
 
-<div class="mb-4 flex items-center justify-between border-b px-4 sm:px-6 py-2">
+<div class="mb-4 flex items-center justify-between px-4 sm:px-6 py-2">
     <div class="flex items-center gap-4">
         <Link href="/" class="text-muted-foreground hover:text-foreground">
             <ArrowLeftIcon size={14} />back
